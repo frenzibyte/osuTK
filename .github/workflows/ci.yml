@@ -11,7 +11,7 @@ jobs:
     
     - name: Set Artifacts Directory
       id: artifactsPath
-      run: echo "::set-output name=NUGET_ARTIFACTS::${{github.workspace}}\artifacts"
+      run: echo "name=NUGET_ARTIFACTS::${{github.workspace}}\artifacts" >> $GITHUB_OUTPUT
 
     - name: Setup .NET Core 2.2
       uses: actions/setup-dotnet@v3
@@ -30,7 +30,7 @@ jobs:
       run: dotnet run --project src/Generator.Bind/Generator.Bind.csproj -c:Release
 
     - name: Pack osuTK
-      run: dotnet pack src/osuTK/osuTK.NS20.csproj -c:Release /p:Version=1.1.${{ github.run_number }}
+      run: dotnet pack src/osuTK/osuTK.NS20.csproj -c:Release /p:Version=1.1.${{ github.run_number }} -o ${{steps.artifactsPath.outputs.nuget_artifacts}}
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
@@ -47,7 +47,7 @@ jobs:
     
     - name: Set Artifacts Directory
       id: artifactsPath
-      run: echo "::set-output name=NUGET_ARTIFACTS::${{github.workspace}}\artifacts"
+      run: echo "name=NUGET_ARTIFACTS::${{github.workspace}}\artifacts" >> $GITHUB_OUTPUT
 
     - name: Setup .NET Core 2.2
       uses: actions/setup-dotnet@v3
@@ -69,7 +69,7 @@ jobs:
       run: dotnet run --project src/Generator.Bind/Generator.Bind.csproj -c:Release
 
     - name: Pack Android
-      run: dotnet pack src/osuTK.Android/osuTK.Android.csproj -c:Release /p:Version=1.1.${{ github.run_number }}
+      run: dotnet pack src/osuTK.Android/osuTK.Android.csproj -c:Release /p:Version=1.1.${{ github.run_number }} -o ${{steps.artifactsPath.outputs.nuget_artifacts}}
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
@@ -86,7 +86,7 @@ jobs:
     
     - name: Set Artifacts Directory
       id: artifactsPath
-      run: echo "::set-output name=NUGET_ARTIFACTS::${{github.workspace}}\artifacts"
+      run: echo "name=NUGET_ARTIFACTS::${{github.workspace}}\artifacts" >> $GITHUB_OUTPUT
 
     - name: Setup .NET Core 2.2
       uses: actions/setup-dotnet@v3
@@ -108,7 +108,7 @@ jobs:
       run: dotnet run --project src/Generator.Bind/Generator.Bind.csproj -c:Release
 
     - name: Pack iOS
-      run: dotnet pack src/osuTK.iOS/osuTK.iOS.csproj -c:Release /p:Version=1.1.${{ github.run_number }}
+      run: dotnet pack src/osuTK.iOS/osuTK.iOS.csproj -c:Release /p:Version=1.1.${{ github.run_number }} -o ${{steps.artifactsPath.outputs.nuget_artifacts}}
       
     - name: Upload Artifacts
       uses: actions/upload-artifact@v2
