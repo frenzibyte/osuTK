@@ -11,7 +11,7 @@ jobs:
     
     - name: Set Artifacts Directory
       id: artifactsPath
-      run: echo "NUGET_ARTIFACTS=${{github.workspace}}\artifacts" >> $GITHUB_OUTPUT
+      run: echo "nuget_artifacts=${{github.workspace}}\artifacts" >> $GITHUB_OUTPUT
 
     - name: Setup .NET Core 2.2
       uses: actions/setup-dotnet@v3
