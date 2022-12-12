@@ -1,0 +1,117 @@
+on: [push, pull_request]
+name: Continuous Integration
+
+jobs:
+  pack-osutk:
+    name: Pack (osuTK)
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Set Artifacts Directory
+      id: artifactsPath
+      run: echo "::set-output name=NUGET_ARTIFACTS::${{github.workspace}}\artifacts"
+
+    - name: Setup .NET Core 2.2
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 2.2.x
+
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Run `Generator.Bind` 
+      run: dotnet run --project src/Generator.Bind/Generator.Bind.csproj -c:Release
+
+    - name: Pack osuTK
+      run: dotnet pack src/osuTK/osuTK.NS20.csproj -c:Release /p:Version=1.1.${{ github.run_number }}
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: osutk-ios
+        path: ${{steps.artifactsPath.outputs.nuget_artifacts}}/*.nupkg
+
+  pack-android:
+    name: Pack (Android)
+    runs-on: windows-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Set Artifacts Directory
+      id: artifactsPath
+      run: echo "::set-output name=NUGET_ARTIFACTS::${{github.workspace}}\artifacts"
+
+    - name: Setup .NET Core 2.2
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 2.2.x
+
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore workloads
+      run: dotnet workload restore
+  
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Run `Generator.Bind` 
+      run: dotnet run --project src/Generator.Bind/Generator.Bind.csproj -c:Release
+
+    - name: Pack Android
+      run: dotnet pack src/osuTK.Android/osuTK.Android.csproj -c:Release /p:Version=1.1.${{ github.run_number }}
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: osutk-ios
+        path: ${{steps.artifactsPath.outputs.nuget_artifacts}}/*.nupkg
+
+  pack-ios:
+    name: Pack (iOS)
+    runs-on: macos-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    
+    - name: Set Artifacts Directory
+      id: artifactsPath
+      run: echo "::set-output name=NUGET_ARTIFACTS::${{github.workspace}}\artifacts"
+
+    - name: Setup .NET Core 2.2
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 2.2.x
+
+    - name: Setup .NET 6.0
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore workloads
+      run: dotnet workload restore
+  
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Run `Generator.Bind` 
+      run: dotnet run --project src/Generator.Bind/Generator.Bind.csproj -c:Release
+
+    - name: Pack iOS
+      run: dotnet pack src/osuTK.iOS/osuTK.iOS.csproj -c:Release /p:Version=1.1.${{ github.run_number }}
+      
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: osutk-ios
+        path: ${{steps.artifactsPath.outputs.nuget_artifacts}}/*.nupkg
